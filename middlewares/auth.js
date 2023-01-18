@@ -2,18 +2,19 @@
 /* eslint-disable linebreak-style */
 // eslint-disable-next-line import/newline-after-import
 const jwt = require('jsonwebtoken');
-const secretOrPrivateKey = 'code_code_code';
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 const { AuthorizationError } = require('../constants/errors');
 
 function generateToken(payload) {
-  return jwt.sign(payload, secretOrPrivateKey);
+  return jwt.sign(payload, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
 }
 
 function checkToken(token) {
   if (!token) {
     return false;
   }
-  return jwt.verify(token, secretOrPrivateKey, { expiresIn: '7d' });
+  return jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
 }
 
 function decodeToken(token) {
@@ -32,7 +33,7 @@ function checkAuth(req, res, next) {
   const token = authorization.replace('Bearer ', '');
   let payload;
   try {
-    payload = jwt.verify(token, 'code_code_code');
+    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
   } catch (err) {
     next(new AuthorizationError('Необходима авторизация'));
   }

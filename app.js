@@ -1,4 +1,6 @@
 /* eslint-disable no-unused-vars */
+require('dotenv').config();
+const helmet = require('helmet');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -14,13 +16,14 @@ const {
   createUser, login,
 } = require('./controllers/users');
 const { checkAuth } = require('./middlewares/auth');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const PORT = 3000;
 const app = express();
-
+app.use(helmet());
 /* app.use(express.static(path.join(__dirnamey, 'public'))); */
 app.use(bodyParser.json());
-
+app.use(requestLogger);
 app.use('/users', checkAuth, routerUsers);
 app.use('/movies', checkAuth, routerMovies);
 app.post('/signin', celebrate({
@@ -33,12 +36,12 @@ app.post('/signin', celebrate({
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string().min(2),
     email: Joi.string().email().required(),
     password: Joi.string().required(),
   }),
 }), createUser);
+app.use(errorLogger);
+app.use(errors()); // обработчик ошибок celebrate
 app.use((err, req, res, next) => {
   // если у ошибки нет статуса, выставляем 500
   const { statusCode = 500, message } = err;
@@ -56,7 +59,6 @@ app.use((err, req, res, next) => {
 
 routerUsers.use((req, res) => { throw new NotFoundError('Роут не найден'); });
 routerMovies.use((req, res) => { throw new NotFoundError('Роут не найден'); });
-app.use(errors()); // обработчик ошибок celebrate
 mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
   useNewUrlParser: true,
 }, () => {
