@@ -26,20 +26,8 @@ app.use(bodyParser.json());
 app.use(requestLogger);
 app.use('/users', checkAuth, routerUsers);
 app.use('/movies', checkAuth, routerMovies);
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30).required(),
-    email: Joi.string().email().required(),
-    password: Joi.string().required(),
-  }),
-}), login);
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    email: Joi.string().email().required(),
-    password: Joi.string().required(),
-  }),
-}), createUser);
+app.post('/signin', login);
+app.post('/signup', createUser);
 app.use(errorLogger);
 app.use(errors()); // обработчик ошибок celebrate
 app.use((err, req, res, next) => {
