@@ -21,7 +21,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 console.log(process.env.NODE_ENV);
 const PORT = 3000;
 const app = express();
-app.use(helmet());
+
 /* app.use(express.static(path.join(__dirnamey, 'public'))); */
 app.use(bodyParser.json());
 app.use(requestLogger);
