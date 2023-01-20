@@ -25,7 +25,7 @@ app.use(helmet());
 /* app.use(express.static(path.join(__dirnamey, 'public'))); */
 app.use(bodyParser.json());
 app.use(requestLogger);
-app.use('/users', checkAuth, routerUsers);
+app.use('/users', routerUsers);
 app.use('/movies', checkAuth, routerMovies);
 app.post('/signin', login);
 app.post('/signup', createUser);
