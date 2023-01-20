@@ -63,6 +63,7 @@ const getCurrentUser = async (req, res, next) => {
 
 const createUser = async (req, res, next) => {
   try {
+    console.log(req)
     const body = { ...req.body };
     const { name, email, password } = body;
     console.log(body, 0);
