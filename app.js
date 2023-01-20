@@ -18,7 +18,8 @@ const {
 const { checkAuth } = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const PORT = 3000;
+console.log(process.env.NODE_ENV);
+const PORT = process.env.PORT || 3000;
 const app = express();
 app.use(helmet());
 /* app.use(express.static(path.join(__dirnamey, 'public'))); */
