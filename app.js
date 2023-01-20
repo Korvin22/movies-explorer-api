@@ -18,17 +18,28 @@ const {
 const { checkAuth } = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-console.log(process.env.NODE_ENV);
 const PORT = 3000;
 const app = express();
-
+app.use(helmet);
 /* app.use(express.static(path.join(__dirnamey, 'public'))); */
 app.use(bodyParser.json());
 app.use(requestLogger);
 app.use('/users', checkAuth, routerUsers);
 app.use('/movies', checkAuth, routerMovies);
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30).required(),
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+  }),
+}), login);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+  }),
+}), createUser);
 app.use(errorLogger);
 app.use(errors()); // обработчик ошибок celebrate
 app.use((err, req, res, next) => {
