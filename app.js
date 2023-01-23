@@ -6,11 +6,23 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
+const rateLimit = require('express-rate-limit');
 const routerUsers = require('./routes/users');
 const routerMovies = require('./routes/movies');
+const indexRoutes = require('./routes/index');
+const errorHandler = require('./middlewares/handler');
+
+const { NODE_ENV, BASE_URL } = process.env;
 const {
   NotFoundError,
 } = require('./constants/errors');
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
 
 const {
   createUser, login,
@@ -21,45 +33,21 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const PORT = 3000;
 const app = express();
 app.use(helmet());
+app.use(limiter);
 /* app.use(express.static(path.join(__dirnamey, 'public'))); */
 app.use(bodyParser.json());
 app.use(requestLogger);
-app.use('/users', checkAuth, routerUsers);
-app.use('/movies', checkAuth, routerMovies);
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30).required(),
-    email: Joi.string().email().required(),
-    password: Joi.string().required(),
-  }),
-}), login);
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    email: Joi.string().email().required(),
-    password: Joi.string().required(),
-  }),
-}), createUser);
+app.use('/', indexRoutes);
 app.use(errorLogger);
 app.use(errors()); // обработчик ошибок celebrate
 app.use((err, req, res, next) => {
   // если у ошибки нет статуса, выставляем 500
-  const { statusCode = 500, message } = err;
-
-  res
-    .status(statusCode)
-    .send({
-      // проверяем статус и выставляем сообщение в зависимости от него
-      message: statusCode === 500
-        ? 'На сервере произошла ошибка'
-        : message,
-    });
-  return next();
+  errorHandler(err, req, res, next);
 });
 
 routerUsers.use((req, res) => { throw new NotFoundError('Роут не найден'); });
 routerMovies.use((req, res) => { throw new NotFoundError('Роут не найден'); });
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
+mongoose.connect(NODE_ENV === 'production' ? BASE_URL : 'dev-secret', {
   useNewUrlParser: true,
 }, () => {
   console.log('base are connected');

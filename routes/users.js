@@ -8,8 +8,8 @@ const {
 router.get('/', getAllUsers);
 router.get('/me', getCurrentUser);
 router.get('/:id', celebrate({
-  body: Joi.object().keys({
-    userId: Joi.string().required().length(24).hex(),
+  params: Joi.object().keys({
+    id: Joi.string().required().length(24).hex(),
   }),
 }), getUser);
 router.post('/', celebrate({
