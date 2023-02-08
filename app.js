@@ -39,8 +39,8 @@ const allowedCors = [
   'http://praktikum.tk',
   'http://localhost:3000',
   'http://localhost:3001',
-  'https://diplomagud.nomoredomains.rocks/',
-  'http://diplomagud.nomoredomains.rocks/',
+  'https://diplomagud.nomoredomains.rocks',
+  'http://diplomagud.nomoredomains.rocks',
 ];
 
 app.use((req, res, next) => {
