@@ -37,9 +37,10 @@ const app = express();
 const allowedCors = [
   'https://praktikum.tk',
   'http://praktikum.tk',
-  'localhost:3000',
-  'localhost:3001',
+  'http://localhost:3000',
+  'http://localhost:3001',
   'https://diplomagud.nomoredomains.rocks/',
+  'http://diplomagud.nomoredomains.rocks/',
 ];
 
 app.use((req, res, next) => {
