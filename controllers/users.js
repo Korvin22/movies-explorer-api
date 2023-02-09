@@ -113,6 +113,7 @@ const login = async (req, res, next) => {
   try {
     const user = await User.findOne({ name, email }).select('+password');
     if (!user) {
+      console.log('нет пользователя');
       throw new AuthorizationError('Неверные логин или пароль');
     }
     const result = await bcrypt.compare(password, user.password);
