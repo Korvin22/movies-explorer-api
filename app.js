@@ -52,7 +52,7 @@ routerMovies.use((req, res) => { throw new NotFoundError('Роут не найд
 mongoose.connect(NODE_ENV === 'production' ? BASE_URL : 'dev-secret', {
   useNewUrlParser: true,
 }, () => {
-  console.log('base are connected');
+  console.log('base are connected').catch((e) => console.log(e));
   app.listen(PORT, () => {
     console.log(`App listening on port ${PORT}`);
   });

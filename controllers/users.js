@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 /* eslint-disable comma-dangle */
 /* eslint-disable consistent-return */
 const bcrypt = require('bcrypt');
@@ -122,6 +123,7 @@ const login = async (req, res, next) => {
     }
   } catch (e) {
     console.log(body, 2);
+    console.log(322222222, e.name);
     if (e.name === 'ValidationError' || e.name === 'CastError') {
       console.log(body, 3);
       next(new ValidationError('Данные введены не корректно'));
