@@ -49,9 +49,10 @@ routerUsers.use((req, res) => { throw new NotFoundError('Роут не найд�
 routerMovies.use((req, res) => { throw new NotFoundError('Роут не найден'); });
 mongoose.connect(NODE_ENV === 'production' ? BASE_URL : 'dev-secret', {
   useNewUrlParser: true,
-}, () => {
-  console.log('base are connected');
+}, (err) => {
+  if (err) console.log(err);
+  else console.log('mongdb is connected');
   app.listen(PORT, () => {
     console.log(`App listening on port ${PORT}`);
   });
-}).catch((e) => console.log(e));
+});
