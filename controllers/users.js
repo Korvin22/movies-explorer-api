@@ -92,7 +92,7 @@ const updateUser = async (req, res, next) => {
   try {
     const newUser = await User.findByIdAndUpdate(
       req.user._id,
-      { name: req.body.name, email: req.body.email },
+      { email: req.body.email },
       { new: true, runValidators: true }
     );
     return res.status(200).send(newUser);
@@ -108,10 +108,10 @@ const updateUser = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   const body = { ...req.body };
-  const { name, email, password } = body;
+  const { email, password } = body;
   console.log(body, 1);
   try {
-    const user = await User.findOne({ name, email }).select('+password');
+    const user = await User.findOne({ email }).select('+password');
     if (!user) {
       console.log('нет пользователя');
       throw new AuthorizationError('Неверные логин или пароль');
