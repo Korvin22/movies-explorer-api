@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 /* eslint-disable consistent-return */
 /* eslint-disable linebreak-style */
 // eslint-disable-next-line import/newline-after-import
