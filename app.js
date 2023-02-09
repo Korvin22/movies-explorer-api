@@ -31,9 +31,7 @@ const { checkAuth } = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const PORT = 3000;
-
 const app = express();
-
 app.use(helmet());
 app.use(limiter);
 /* app.use(express.static(path.join(__dirnamey, 'public'))); */
@@ -52,7 +50,7 @@ routerMovies.use((req, res) => { throw new NotFoundError('Роут не найд
 mongoose.connect(NODE_ENV === 'production' ? BASE_URL : 'dev-secret', {
   useNewUrlParser: true,
 }, () => {
-  console.log('base are connected').catch((e) => console.log(e));
+  console.log('base are connected');
   app.listen(PORT, () => {
     console.log(`App listening on port ${PORT}`);
   });
