@@ -54,4 +54,4 @@ mongoose.connect(NODE_ENV === 'production' ? BASE_URL : 'dev-secret', {
   app.listen(PORT, () => {
     console.log(`App listening on port ${PORT}`);
   });
-});
+}).catch((e) => console.log(e));
