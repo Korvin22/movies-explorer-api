@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 require('dotenv').config();
 const helmet = require('helmet');
+const cors = require('cors');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -32,6 +33,16 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const PORT = 3000;
 const app = express();
+const allowedCors = ['http://localhost:3000',
+  'http://movies-front.nomoredomains.rocks',
+  'https://movies-front.nomoredomains.rocks',
+];
+const corsOptions = {
+  origin: allowedCors,
+  optionsSuccessStatus: 200,
+  credentials: true,
+};
+app.use(cors(corsOptions));
 app.use(helmet());
 app.use(limiter);
 /* app.use(express.static(path.join(__dirnamey, 'public'))); */
