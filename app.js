@@ -38,6 +38,8 @@ const allowedCors = ['http://localhost:3000',
   'https://movies-front.nomoredomains.rocks',
   'https://diplomagud.nomoredomains.rocks/',
   'http://diplomagud.nomoredomains.rocks/',
+  'http://diplomagud.nomoredomains.work',
+  'https://diplomagud.nomoredomains.work',
 ];
 const corsOptions = {
   origin: allowedCors,
