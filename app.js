@@ -34,8 +34,6 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const PORT = 3000;
 const app = express();
 const allowedCors = ['http://localhost:3000',
-  'http://movies-front.nomoredomains.rocks',
-  'https://movies-front.nomoredomains.rocks',
   'https://diplomagud.nomoredomains.rocks/',
   'http://diplomagud.nomoredomains.rocks/',
   'http://diplomagud.nomoredomains.work/',
