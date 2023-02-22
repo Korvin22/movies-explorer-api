@@ -40,7 +40,7 @@ const allowedCors = ['http://localhost:3000',
   'https://diplomagud.nomoredomains.work/',
 ];
 const corsOptions = {
-  origin: '*',
+  origin: allowedCors,
   optionsSuccessStatus: 200,
   credentials: true,
 };
