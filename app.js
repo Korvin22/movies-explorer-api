@@ -52,7 +52,7 @@ app.use(limiter);
 /* app.use(express.static(path.join(__dirnamey, 'public'))); */
 app.use(bodyParser.json());
 app.use(requestLogger);
-app.use('/api', indexRoutes);
+app.use('/', indexRoutes);
 app.use(errorLogger);
 app.use(errors()); // обработчик ошибок celebrate
 app.use((err, req, res, next) => {
