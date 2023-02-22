@@ -34,10 +34,10 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const PORT = 3000;
 const app = express();
 const allowedCors = ['http://localhost:3000',
-  'https://diplomagud.nomoredomains.rocks/',
-  'http://diplomagud.nomoredomains.rocks/',
-  'http://diplomagud.nomoredomains.work/',
-  'https://diplomagud.nomoredomains.work/',
+  'https://diplomagud.nomoredomains.rocks',
+  'http://diplomagud.nomoredomains.rocks',
+  'http://diplomagud.nomoredomains.work',
+  'https://diplomagud.nomoredomains.work',
 ];
 const corsOptions = {
   origin: allowedCors,
