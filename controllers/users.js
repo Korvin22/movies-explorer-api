@@ -9,6 +9,7 @@ const {
   NotFoundError,
   WrongData,
   AuthorizationError,
+  DefaultError
 } = require('../constants/errors');
 
 const {
@@ -62,40 +63,59 @@ const getCurrentUser = async (req, res, next) => {
   }
 };
 
-const createUser = async (req, res, next) => {
-  try {
-    console.log(req);
-    const body = { ...req.body };
-    const { name, email, password } = body;
-    console.log(body, 0);
-    const hash = await bcrypt.hash(password, 10);
-    const user = await User.create({ name, email, password: hash });
-    console.log(user, 1);
-    return res.status(200).send({ _id: user._id });
-  } catch (e) {
-    console.log(e);
-    if (e.name === 'ValidationError' || e.name === 'CastError') {
-      next(new ValidationError('Данные введены не корректно'));
-      return;
-    }
-    /* ошибку прописал, но при одинаковом email ee не ловит, не могу понять почему */
-    if (e.code === 11000) {
-      next(new WrongData('Почта или пароль введены не верно'));
-      return;
-    }
-    next(e);
-  }
+const createUser = (req, res, next) => {
+  const {
+    name, email, password,
+  } = req.body;
+  User.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        bcrypt.hash(password, 10)
+          .then((hash) => User.create({
+            name,
+            email,
+            password: hash,
+          }))
+          .then(() => res.status(201).send({
+            data: {
+              name, email,
+            },
+          }))
+          .catch((err) => {
+            if (err.name === 'MongoError' && err.code === 11000) {
+              next(new WrongData('Пользователь уже существует'));
+            } else {
+              next(new DefaultError('Ошибка сервера'));
+            }
+          });
+      } else {
+        next(new WrongData('Пользователь уже существует'));
+      }
+    })
+    .catch(() => {
+      next(new DefaultError('Ошибка сервера'));
+    });
 };
 
 const updateUser = async (req, res, next) => {
-  console.log(req.body, 1);
   try {
-    const newUser = await User.findByIdAndUpdate(
-      req.user._id,
-      { email: req.body.email },
-      { new: true, runValidators: true }
-    );
-    return res.status(200).send(newUser);
+    const { name, email } = req.body;
+    const createdUser = await User.findOne({ email });
+    if (createdUser) {
+      throw new WrongData('такой email уже зарегистрирован');
+    } else {
+      const newUser = await User.findByIdAndUpdate(
+        req.user._id,
+        { name, email },
+        { new: true, runValidators: true }
+      );
+      if (!newUser) {
+        throw new NotFoundError('Пользователь с указанным _id не найден');
+      } else {
+        console.log(newUser);
+        res.status(200).send(newUser);
+      }
+    }
   } catch (e) {
     console.log(req.body, 2);
     if (e.name === 'ValidationError') {
