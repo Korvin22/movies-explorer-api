@@ -10,8 +10,10 @@ const {
 const { decodeToken } = require('../middlewares/auth');
 
 const getAllMovies = async (req, res, next) => {
+  console.log(req.user._id);
+  const owner = req.user._id;
   try {
-    const movies = await Movie.find({});
+    const movies = await Movie.find({ owner });
     return res.status(200).send(movies);
   } catch (e) {
     next(e);
