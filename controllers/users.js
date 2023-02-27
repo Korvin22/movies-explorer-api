@@ -69,6 +69,9 @@ const createUser = (req, res, next) => {
   } = req.body;
   User.findOne({ email })
     .then((user) => {
+      if (user) {
+        throw new WrongData('Пользователь с таким email уже существует');
+      }
       if (!user) {
         bcrypt.hash(password, 10)
           .then((hash) => User.create({
