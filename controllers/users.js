@@ -103,7 +103,9 @@ const updateUser = async (req, res, next) => {
   try {
     const { name, email } = req.body;
     const createdUser = await User.findOne({ email });
-    if (createdUser) {
+    const user = await User.findById(req.user._id);
+    if (createdUser && email !== user.email) {
+      console.log(email !== user.email);
       throw new WrongData('такой email уже зарегистрирован');
     } else {
       const newUser = await User.findByIdAndUpdate(
