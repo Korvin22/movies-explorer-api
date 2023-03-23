@@ -1,5 +1,5 @@
-# movies-explorer-api.  Быстрый старт в `backend`
-
+# movies-explorer-api.
+API для аутентификации пользователей и сохранения фильмов.
 Backend  http://diplomagud.nomoredomains.rocks/
 
 ## Применяемые технологии 
