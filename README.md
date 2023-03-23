@@ -2,6 +2,24 @@
 
 Backend  http://diplomagud.nomoredomains.rocks/
 
+## Применяемые технологии 
+
+* Expressjs
+* nodemon
+* MongoDB
+* mongoose
+* dotenv
+* cors
+* celebrate
+* bcryptjs
+* express-rate-limit
+* winston
+* express-winston
+* helmet
+* jsonwebtoken
+* validator
+* eslint
+
 ## Запуск проекта
 
 `npm run start` — запускает сервер   
